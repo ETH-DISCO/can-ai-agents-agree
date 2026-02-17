@@ -1,6 +1,6 @@
 # Byzantine Consensus Game (BCG)
 
-A multi-agent simulation framework for studying Byzantine fault tolerance using LLM-based agents. This is the code accompanying the ICLR 2026 Workshop paper.
+A multi-agent simulation framework for studying Byzantine fault tolerance using LLM-based agents.
 
 ## Overview
 
