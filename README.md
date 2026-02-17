@@ -25,7 +25,6 @@ byzantine_consensus_game/
 ├── communication_protocol.py  # Protocol abstractions
 ├── protocol_factory.py        # Protocol instantiation
 ├── requirements.txt           # Python dependencies
-└── results/analysis/          # Aggregated experiment results
 ```
 
 ## Requirements
