@@ -24,7 +24,7 @@ byzantine_consensus_game/
 ├── agent_network.py           # Network topology management
 ├── communication_protocol.py  # Protocol abstractions
 ├── protocol_factory.py        # Protocol instantiation
-├── requirements.txt           # Python dependencies
+└──  requirements.txt           # Python dependencies
 ```
 
 ## Requirements
