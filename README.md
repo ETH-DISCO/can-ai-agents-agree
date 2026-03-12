@@ -1,10 +1,21 @@
-# Byzantine Consensus Game (BCG)
+<div align="center">
 
-A multi-agent simulation framework for studying Byzantine fault tolerance using LLM-based agents.
+# Can AI Agents Agree?
+
+**Frédéric Berdoz · Leonardo Rugli · Roger Wattenhofer**
+
+ETH Zurich
+
+[![arXiv](https://img.shields.io/badge/arXiv-2603.01213-b31b1b.svg)](https://arxiv.org/abs/2603.01213)
+
+Large language models are increasingly deployed as cooperating agents, yet their behavior in adversarial consensus settings has not been systematically studied. We evaluate LLM-based agents on a Byzantine consensus game over scalar values using a synchronous all-to-all simulation. We test consensus in a no-stake setting where agents have no preferences over the final value, so evaluation focuses on agreement rather than value optimality. Across hundreds of simulations spanning model sizes, group sizes, and Byzantine fractions, we find that valid agreement is not reliable even in benign settings and degrades as group size grows. Introducing a small number of Byzantine agents further reduces success. Failures are dominated by loss of liveness, such as timeouts and stalled convergence, rather than subtle value corruption. Overall, the results suggest that reliable agreement is not yet a dependable emergent capability of current LLM-agent groups even in no-stake settings, raising caution for deployments that rely on robust coordination.
+
+</div>
 
 ## Overview
 
-This implementation simulates a Byzantine Consensus Game where:
+A multi-agent simulation framework for studying Byzantine fault tolerance using LLM-based agents.
+
 - **Honest agents** try to reach consensus on a common integer value
 - **Byzantine agents** attempt to disrupt consensus (identity hidden during simulation)
 - All agents use **vLLM** with structured JSON output for decision-making
@@ -14,17 +25,20 @@ This implementation simulates a Byzantine Consensus Game where:
 ## Project Structure
 
 ```
-byzantine_consensus_game/
-├── main.py                    # Entry point - run single simulations
-├── config.py                  # All configuration (models, game params, LLM settings)
-├── byzantine_consensus.py     # Game logic and state management
-├── bcg_agents.py              # LLM-based agent implementations (honest + Byzantine)
-├── vllm_agent.py              # vLLM interface with JSON schema enforcement
-├── a2a_sim.py                 # A2A-sim communication protocol
-├── agent_network.py           # Network topology management
-├── communication_protocol.py  # Protocol abstractions
-├── protocol_factory.py        # Protocol instantiation
-└──  requirements.txt           # Python dependencies
+can-ai-agents-agree/
+├── run.py                         # Root launcher (delegates to main.py)
+├── requirements.txt               # Python dependencies
+├── LICENSE                        # MIT License
+└── byzantine_consensus_game/
+    ├── main.py                    # Entry point - run single simulations
+    ├── config.py                  # All configuration (models, game params, LLM settings)
+    ├── byzantine_consensus.py     # Game logic and state management
+    ├── bcg_agents.py              # LLM-based agent implementations (honest + Byzantine)
+    ├── vllm_agent.py              # vLLM interface with JSON schema enforcement
+    ├── a2a_sim.py                 # A2A-sim communication protocol
+    ├── agent_network.py           # Network topology management
+    ├── communication_protocol.py  # Protocol abstractions
+    └── protocol_factory.py        # Protocol instantiation
 ```
 
 ## Requirements
@@ -33,10 +47,17 @@ byzantine_consensus_game/
 - CUDA-capable GPU (recommended: 24GB+ VRAM for 14B models)
 - vLLM 0.6.0+
 
-## Installation
+## Quick Start
 
 ```bash
 pip install -r requirements.txt
+
+# Run from repo root:
+python run.py --honest 8 --byzantine 0 --byzantine-awareness may_exist
+
+# Or run directly from the game directory:
+cd byzantine_consensus_game
+python main.py --honest 8 --byzantine 0 --byzantine-awareness may_exist
 ```
 
 ## Models
@@ -50,29 +71,27 @@ The framework supports the following models (configured in `config.py`):
 | Qwen3-32B | `Qwen/Qwen3-32B` | 32B |
 | Mistral-22B | `mistralai/Mistral-Small-Instruct-2409` | 22B |
 
-## Usage
-
-### Reproducing Paper Experiments
+## Reproducing Paper Experiments
 
 **Q1 - Cooperative consensus (no Byzantine agents):**
 ```bash
 # 8 honest agents, may_exist prompt (agents told Byzantine may exist)
-python main.py --honest 8 --byzantine 0 --byzantine-awareness may_exist
+python run.py --honest 8 --byzantine 0 --byzantine-awareness may_exist
 
 # 4 honest agents, none_exist prompt (agents told no Byzantine exist)
-python main.py --honest 4 --byzantine 0 --byzantine-awareness none_exist
+python run.py --honest 4 --byzantine 0 --byzantine-awareness none_exist
 ```
 
 **Q2 - Byzantine resilience:**
 ```bash
 # 8 honest + 2 Byzantine agents
-python main.py --honest 8 --byzantine 2 --byzantine-awareness may_exist
+python run.py --honest 8 --byzantine 2 --byzantine-awareness may_exist
 ```
 
-### All CLI Options
+## All CLI Options
 
 ```bash
-python main.py \
+python run.py \
   --honest 8 \              # Number of honest agents (default: 8)
   --byzantine 0 \           # Number of Byzantine agents (default: 0)
   --rounds 50 \             # Max rounds before deadline (default: 50)
